@@ -1,3 +1,4 @@
+import 'package:fitness_app/Screens/Welcome/welcome_screen.dart';
 import 'package:fitness_app/pages/AddMeals.dart';
 import 'package:fitness_app/pages/FirstPage.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,8 @@ class MyApp extends StatelessWidget {
       title: 'Fitnes App',
       
       home: 
-      FirstPage(),
-      // AddMeals(),
+      // FirstPage(),
+      WelcomeScreen(),
       theme: ThemeData(
     // Define the default brightness and colors.
     brightness: Brightness.light,
