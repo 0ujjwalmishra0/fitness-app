@@ -2,7 +2,7 @@ import 'package:fitness_app/pages/Meals.dart';
 import 'package:fitness_app/pages/Insights.dart';
 import 'package:flutter/material.dart';
 
-import 'Profile.dart';
+import '../Screens/Profile/Profile.dart';
 
 class FirstPage extends StatefulWidget {
   @override

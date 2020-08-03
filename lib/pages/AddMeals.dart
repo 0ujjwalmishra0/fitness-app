@@ -8,6 +8,7 @@ class AddMeals extends StatelessWidget {
     return AppBar(
       brightness: Brightness.light,
       backgroundColor: Colors.white,
+      automaticallyImplyLeading: false,
       title: TextFormField(
         controller: searchController,
         // enableInteractiveSelection: ,

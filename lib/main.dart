@@ -1,3 +1,5 @@
+import 'package:fitness_app/Screens/Profile/BasicInformation.dart';
+import 'package:fitness_app/Screens/Profile/goal.dart';
 import 'package:fitness_app/Screens/Welcome/welcome_screen.dart';
 import 'package:fitness_app/pages/AddMeals.dart';
 import 'package:fitness_app/pages/FirstPage.dart';
@@ -16,11 +18,13 @@ class MyApp extends StatelessWidget {
       
       home: 
       // FirstPage(),
-      WelcomeScreen(),
+      // BasicInformation(),
+      // WelcomeScreen(),
+Goal(),
       theme: ThemeData(
     // Define the default brightness and colors.
     brightness: Brightness.light,
-    primaryColor: Colors.amber,
+    primaryColor: Color(0xFF6F35A5),
     accentColor: Colors.cyan[600],
 
     // Define the default font family.

@@ -60,7 +60,8 @@ class Meals extends StatelessWidget {
                   children: <Widget>[
                     Text('0 of 450kcal'),
                     IconButton(icon: Icon(Icons.add_circle), 
-                    onPressed: () {Navigator.of(context)
+                    onPressed: () {
+                      Navigator.of(context)
         .push(CustomRoute(builder: (ctx) => AddMeals()));
 }),
                   ],
@@ -79,6 +80,7 @@ class Meals extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Meals'),
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
