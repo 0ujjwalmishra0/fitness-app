@@ -44,6 +44,13 @@ class Body extends StatelessWidget {
               Navigator.of(context).push(CustomRoute(builder: (ctx) => Goal()));
             },
           ),
+          ProfileMenuItem(
+            iconSrc: "assets/icons2/info.svg",
+            title: "Logout",
+            press: () {
+              // Navigator.of(context).push(CustomRoute(builder: (ctx) => Goal()));
+            },
+          ),
         ],
       ),
     );
