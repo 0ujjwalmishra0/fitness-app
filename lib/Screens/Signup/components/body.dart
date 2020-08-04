@@ -1,3 +1,4 @@
+import 'package:fitness_app/models/auth.dart';
 import 'package:fitness_app/pages/FirstPage.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_app/Screens/Login/login_screen.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 class Body extends StatelessWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -102,12 +104,22 @@ class Body extends StatelessWidget {
                 SocalIcon(
                   iconSrc: "assets/icons/google-plus.svg",
                   press: () {
-                    final currentUser = signInWithGoogle().whenComplete(() {
+                    final currentUser = signInWithGoogle()
+                        .whenComplete(() {
+                      // final currentUser = Provider.of<Auth>(context,listen: false).user;
+                      // print(currentUser.displayName);
+                      // print(currentUser.email);
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
                         return FirstPage();
                       }));
                     });
+                    // final currentUser = signInWithGoogle().whenComplete(() {
+                    //   Navigator.of(context).pushReplacement(
+                    //       MaterialPageRoute(builder: (context) {
+                    //     return FirstPage();
+                    //   }));
+                    // });
                   },
                 ),
               ],

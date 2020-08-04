@@ -6,3 +6,5 @@ const kPrimaryLightColor = Color(0xFFF1E6FF);
 const kPrimaryColor = Color(0xFF84AB5C);
 const kTextColor = Color(0xFF202E2E);
 const kTextLigntColor = Color(0xFF7286A5);
+
+const kbottomNavigationColor = Colors.green;

@@ -14,12 +14,14 @@ dependencies:
     sdk: flutter
   shared_preferences: ^0.5.6+3
   image: ^2.0.7
+  provider: ^4.3.1
   animator: ^1.0.0+5
   cached_network_image:
   circular_profile_avatar: ^1.0.6
   syncfusion_flutter_charts: ^17.3.26
   firebase_auth: ^0.16.1
   google_sign_in: ^4.5.1
+  curved_navigation_bar: ^0.3.3
   flutter_svg:
 
 

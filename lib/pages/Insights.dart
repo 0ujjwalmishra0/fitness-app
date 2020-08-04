@@ -10,6 +10,7 @@ class _InsightsState extends State<Insights> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
+      body: Center(child: Text('Area for showing Activity and charts'),),
       
     );
   }

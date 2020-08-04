@@ -1,4 +1,6 @@
-import 'package:fitness_app/pages/Meals.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:fitness_app/Screens/Meals/Meals.dart';
+import 'package:fitness_app/constants.dart';
 import 'package:fitness_app/pages/Insights.dart';
 import 'package:flutter/material.dart';
 
@@ -10,24 +12,13 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
-    PageController pageController;
+  PageController pageController = PageController(
+    initialPage: 0,
+    // keepPage: true,
+  );
 
   int pageIndex = 0;
-
-    @override
-  void initState() {
-    // getCurrentUser();
-    
-    pageController = PageController();
-   
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    pageController.dispose();
-    super.dispose();
-  }
+  GlobalKey _bottomNavigationKey = GlobalKey();
 
   selectPage(int pageIndex) {
     pageController.animateToPage(
@@ -37,9 +28,9 @@ class _FirstPageState extends State<FirstPage> {
     );
   }
 
-  onPageChanged(int pageIndex) {
+  onPageChanged(int index) {
     setState(() {
-      this.pageIndex = pageIndex;
+      pageIndex = index;
     });
   }
 
@@ -51,39 +42,68 @@ class _FirstPageState extends State<FirstPage> {
           Meals(),
           Insights(),
           Profile(),
-
-          // profile.Profile(profileId: routeArgs.id,profileUsername: routeArgs.username,)
         ],
         controller: pageController,
-        onPageChanged: onPageChanged,
+        onPageChanged: (index) => onPageChanged(index),
         physics: NeverScrollableScrollPhysics(),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        selectedItemColor: Color(0xffE25E60),
-        unselectedItemColor: Colors.black.withOpacity(0.78),
-        elevation: 3,
-        currentIndex: pageIndex,
-        onTap: selectPage,
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-               title: Text('Home'),
-               ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.account_box),
-               title: Text('Plans'),
-          ),
-          
-          BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle),
-               title: Text('Profile'),
-          ),
-         
-        ],
-      ),
+      bottomNavigationBar: buildCurvedNavigationBar(_bottomNavigationKey, pageIndex, selectPage),
     );
   }
 }
+
+// using curved_navigation_bar package
+  CurvedNavigationBar buildCurvedNavigationBar(_bottomNavigationKey,pageIndex,selectPage){
+    return CurvedNavigationBar(
+      buttonBackgroundColor: kbottomNavigationColor,
+        key: _bottomNavigationKey,
+        index: pageIndex,
+        height: 50,
+        color: kbottomNavigationColor,
+        backgroundColor: Colors.white,
+        animationCurve: Curves.easeInOut,
+        animationDuration: Duration(milliseconds: 250),
+        onTap: selectPage,
+           items: [
+          Icon(
+            Icons.home,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.account_circle,
+            color: Colors.white,
+          ),
+        ],
+        );
+  }
+
+  /*** previous bottom navigation bar ***/
+// buildBottomNavigation(pageIndex,selectPage){
+//   return BottomNavigationBar(
+//         showSelectedLabels: false,
+//         showUnselectedLabels: false,
+//         selectedItemColor: Color(0xffE25E60),
+//         unselectedItemColor: Colors.black.withOpacity(0.78),
+//         elevation: 3,
+//         currentIndex: pageIndex,
+//         onTap: selectPage,
+//         items: [
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.home),
+//             title: Text('Home'),
+//           ),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.account_box),
+//             title: Text('Plans'),
+//           ),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.account_circle),
+//             title: Text('Profile'),
+//           ),],);
+// }
+
+

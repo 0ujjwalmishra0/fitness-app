@@ -56,13 +56,15 @@ class Meals extends StatelessWidget {
       },
           child: Container(
         margin: EdgeInsets.only(top: 10,bottom: 10),
-        height: defaultSize*19, // 190,
-        width:  defaultSize*35, //330,
+        height: 190 ,
+        // defaultSize*19, // 190,
+        width:  330,
+        // defaultSize*35, //330,
         decoration: BoxDecoration(
           color: kPrimaryColor,
           borderRadius: BorderRadius.circular(
-            // 18,
-            SizeConfig.defaultSize * 1.8
+            18,
+            // SizeConfig.defaultSize * 1.8
             ),
         ),
         child: Row(
@@ -119,7 +121,7 @@ class Meals extends StatelessWidget {
     return Scaffold(
       appBar: buildAppBar(defaultSize),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0,vertical: 20),
+        padding: const EdgeInsets.only(left: 25.0,right: 25,top: 20,bottom: 10,),
         child: SingleChildScrollView(
                   child: Column(
             children: <Widget>[
