@@ -1,6 +1,4 @@
 import 'package:fitness_app/components/listTile.dart';
-
-import 'package:fitness_app/size_config.dart';
 import 'package:flutter/material.dart';
 
 class ProfileMenuItem extends StatelessWidget {
@@ -15,7 +13,6 @@ class ProfileMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double defaultSize = SizeConfig.defaultSize;
     return InkWell(
       onTap: press,
       child: MyListTile( iconSrc: iconSrc, title: title,trailingIcon: 

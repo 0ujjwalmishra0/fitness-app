@@ -1,5 +1,4 @@
 import 'package:fitness_app/components/rounded_button.dart';
-import 'package:fitness_app/components/rounded_input_field.dart';
 import 'package:fitness_app/components/text_field_container.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_app/constants.dart';
@@ -27,7 +26,7 @@ class BasicInformation extends StatelessWidget {
   }
 
   Widget buildChooseGender(Size size) {
-    bool isMale = true;
+    // bool isMale = true;
     return Row(
       children: <Widget>[
         Icon(Icons.access_alarm),

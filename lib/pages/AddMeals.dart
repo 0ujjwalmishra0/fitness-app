@@ -1,4 +1,4 @@
-import 'package:fitness_app/components/listTile.dart';
+
 import 'package:fitness_app/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -65,7 +65,7 @@ class _AddMealsState extends State<AddMeals> {
     );
   }
 
-  Widget buildSearchText(int index) {
+    buildSearchText(int index) {
     if (index < searchedFood.length - 1) {
       
       return ListTile(

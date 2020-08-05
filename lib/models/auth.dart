@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app/Screens/Welcome/welcome_screen.dart';
+import 'package:fitness_app/models/custom_route.dart';
+import 'package:fitness_app/pages/LoginScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -36,13 +40,22 @@ class Auth with ChangeNotifier {
     imageUrl = user.photoUrl;
 
     final FirebaseUser currentUser = await _auth.currentUser();
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('email', email);
+
     assert(user.uid == currentUser.uid);
 
     return user;
   }
 
-  void signOutGoogle() async {
-    await googleSignIn.signOut();
+  void signOutGoogle(context) async {
+    await googleSignIn.signOut().then((value) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove('email');
+      });
+      Navigator.of(context).pushReplacement(CustomRoute(builder:(ctx)=> WelcomeScreen()));
+    
 
     print("User Sign Out");
   }

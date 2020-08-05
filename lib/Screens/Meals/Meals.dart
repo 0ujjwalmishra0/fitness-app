@@ -1,4 +1,4 @@
-import 'package:fitness_app/Screens/Meals/components/card.dart';
+
 import 'package:fitness_app/constants.dart';
 import 'package:fitness_app/models/custom_route.dart';
 import 'package:fitness_app/pages/AddMeals.dart';
@@ -47,7 +47,7 @@ class Meals extends StatelessWidget {
 
   Widget buildCard(String title,String description,String imgSrc,BuildContext context ){
     
-    double defaultSize = SizeConfig.defaultSize;
+    // double defaultSize = SizeConfig.defaultSize;
     description = description.isEmpty ? 'No meal added yet' : description;
     return GestureDetector(
       onTap: (){
@@ -121,7 +121,7 @@ class Meals extends StatelessWidget {
     return Scaffold(
       appBar: buildAppBar(defaultSize),
       body: Padding(
-        padding: const EdgeInsets.only(left: 25.0,right: 25,top: 20,bottom: 10,),
+        padding: const EdgeInsets.only(left: 25.0,right: 25,top: 10,bottom: 10,),
         child: SingleChildScrollView(
                   child: Column(
             children: <Widget>[

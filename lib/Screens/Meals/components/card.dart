@@ -1,7 +1,6 @@
 import 'package:fitness_app/constants.dart';
 import 'package:fitness_app/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class CardWidget extends StatelessWidget {
   // final Card recipeBundle;

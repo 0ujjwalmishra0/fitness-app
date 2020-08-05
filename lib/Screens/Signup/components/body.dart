@@ -15,41 +15,47 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
-class Body extends StatelessWidget {
+class Body extends StatelessWidget with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
+  FirebaseUser googleUser;
 
-  Future<String> signInWithGoogle() async {
-    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-    final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
-
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
-
-    final AuthResult authResult = await _auth.signInWithCredential(credential);
-    final FirebaseUser user = authResult.user;
-
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
-
-    final FirebaseUser currentUser = await _auth.currentUser();
-    assert(user.uid == currentUser.uid);
-
-    return 'signInWithGoogle succeeded: $user';
+  getUser(user) {
+    return user;
   }
 
-  void signOutGoogle() async {
-    await googleSignIn.signOut();
+  // Future<FirebaseUser> signInWithGoogle() async {
+  //   final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+  //   final GoogleSignInAuthentication googleSignInAuthentication =
+  //       await googleSignInAccount.authentication;
 
-    print("User Sign Out");
-  }
+  //   final AuthCredential credential = GoogleAuthProvider.getCredential(
+  //     accessToken: googleSignInAuthentication.accessToken,
+  //     idToken: googleSignInAuthentication.idToken,
+  //   );
+
+  //   final AuthResult authResult = await _auth.signInWithCredential(credential);
+  //   final FirebaseUser user = authResult.user;
+
+  //   assert(!user.isAnonymous);
+  //   assert(await user.getIdToken() != null);
+
+  //   final FirebaseUser currentUser = await _auth.currentUser();
+  //   assert(user.uid == currentUser.uid);
+
+  //   return user;
+  // }
+
+  // void signOutGoogle() async {
+  //   await googleSignIn.signOut();
+
+  //   print("User Sign Out");
+  // }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final auth = Provider.of<Auth>(context, listen: false);
     return Background(
       child: SingleChildScrollView(
         child: Column(
@@ -104,22 +110,19 @@ class Body extends StatelessWidget {
                 SocalIcon(
                   iconSrc: "assets/icons/google-plus.svg",
                   press: () {
-                    final currentUser = signInWithGoogle()
-                        .whenComplete(() {
-                      // final currentUser = Provider.of<Auth>(context,listen: false).user;
-                      // print(currentUser.displayName);
-                      // print(currentUser.email);
+                    auth.signInWithGoogle()
+                        // signInWithGoogle()
+                        .then((FirebaseUser user) {
+                      getUser(user);
+                      googleUser = user;
+                      print(user);
+                      print(user.displayName);
+                      print(user.photoUrl);
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
                         return FirstPage();
                       }));
                     });
-                    // final currentUser = signInWithGoogle().whenComplete(() {
-                    //   Navigator.of(context).pushReplacement(
-                    //       MaterialPageRoute(builder: (context) {
-                    //     return FirstPage();
-                    //   }));
-                    // });
                   },
                 ),
               ],

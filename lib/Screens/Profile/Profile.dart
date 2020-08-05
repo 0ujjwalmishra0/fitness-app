@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:fitness_app/Screens/Profile/BasicInformation.dart';
-import 'package:fitness_app/Screens/Profile/goal.dart';
 import 'package:fitness_app/constants.dart';
 import 'package:fitness_app/models/custom_route.dart';
 import 'package:fitness_app/size_config.dart';
