@@ -1,4 +1,6 @@
+import 'package:fitness_app/models/Database.dart';
 import 'package:fitness_app/models/auth.dart';
+import 'package:fitness_app/models/user.dart';
 import 'package:fitness_app/pages/FirstPage.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_app/Screens/Login/login_screen.dart';
@@ -14,9 +16,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Body extends StatelessWidget with ChangeNotifier {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   FirebaseUser googleUser;
 
@@ -24,33 +26,25 @@ class Body extends StatelessWidget with ChangeNotifier {
     return user;
   }
 
-  // Future<FirebaseUser> signInWithGoogle() async {
-  //   final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-  //   final GoogleSignInAuthentication googleSignInAuthentication =
-  //       await googleSignInAccount.authentication;
+  database(displayName, email, photoUrl) {
+    var newDBUser = User(
+        age: 0,
+        height: 0,
+        sex: '',
+        weight: 0,
+        displayName: displayName,
+        email: email,
+        photoUrl: photoUrl);
+    DBProvider.db.newUser(newDBUser);
+  }
 
-  //   final AuthCredential credential = GoogleAuthProvider.getCredential(
-  //     accessToken: googleSignInAuthentication.accessToken,
-  //     idToken: googleSignInAuthentication.idToken,
-  //   );
-
-  //   final AuthResult authResult = await _auth.signInWithCredential(credential);
-  //   final FirebaseUser user = authResult.user;
-
-  //   assert(!user.isAnonymous);
-  //   assert(await user.getIdToken() != null);
-
-  //   final FirebaseUser currentUser = await _auth.currentUser();
-  //   assert(user.uid == currentUser.uid);
-
-  //   return user;
-  // }
-
-  // void signOutGoogle() async {
-  //   await googleSignIn.signOut();
-
-  //   print("User Sign Out");
-  // }
+  setLocalData(gmail, displayName, photoUrl) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("gmail", gmail);
+    prefs.setString("displayName", displayName);
+    prefs.setString("photoUrl", photoUrl);
+    print("inside prefs gmail is: $gmail");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,11 +107,13 @@ class Body extends StatelessWidget with ChangeNotifier {
                     auth.signInWithGoogle()
                         // signInWithGoogle()
                         .then((FirebaseUser user) {
-                      getUser(user);
-                      googleUser = user;
-                      print(user);
-                      print(user.displayName);
-                      print(user.photoUrl);
+                      // getUser(user);
+                      // googleUser = user;
+                      setLocalData(user.email, user.displayName, user.photoUrl);
+                      database(user.displayName, user.email, user.photoUrl);
+                      // print(user.displayName);
+                      // print(user.photoUrl);
+
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
                         return FirstPage();

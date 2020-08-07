@@ -1,4 +1,5 @@
 
+import 'package:fitness_app/components/app_drawer.dart';
 import 'package:fitness_app/constants.dart';
 import 'package:fitness_app/models/custom_route.dart';
 import 'package:fitness_app/pages/AddMeals.dart';
@@ -120,6 +121,7 @@ class Meals extends StatelessWidget {
     double defaultSize = SizeConfig.defaultSize;
     return Scaffold(
       appBar: buildAppBar(defaultSize),
+      drawer: AppDrawer(),
       body: Padding(
         padding: const EdgeInsets.only(left: 25.0,right: 25,top: 10,bottom: 10,),
         child: SingleChildScrollView(
@@ -143,13 +145,14 @@ class Meals extends StatelessWidget {
   AppBar buildAppBar(double defaultSize) {
     return AppBar(
       brightness: Brightness.dark,
-      leading: IconButton(
-        icon: SvgPicture.asset("assets/icons2/menu.svg"),
-        onPressed: () {},
-      ),
+      // leading: IconButton(
+      //   icon: SvgPicture.asset("assets/icons2/menu.svg"),
+      //   onPressed: () {},
+      // ),
       // On Android by default its false
       centerTitle: true,
       title: Image.asset("assets/images/logo.png"),
+    
       actions: <Widget>[
         IconButton(
           icon: SvgPicture.asset("assets/icons2/search.svg"),

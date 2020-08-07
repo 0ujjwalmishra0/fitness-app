@@ -18,9 +18,13 @@ class MyListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double defaultSize = SizeConfig.defaultSize;
+    Size size = MediaQuery.of(context).size;
     return Padding(
-      padding: EdgeInsets.symmetric(
-          horizontal: defaultSize * 2, vertical: defaultSize * 2.5),
+      padding: EdgeInsets.only(
+          left: defaultSize * 3,
+          right: defaultSize * 3,
+          top: defaultSize*2.5,
+          bottom: defaultSize*1 ),
       child: SafeArea(
         child: Row(
           children: <Widget>[
@@ -33,13 +37,14 @@ class MyListTile extends StatelessWidget {
                 color: kTextLigntColor,
               ),
             ),
-            Spacer(),
+            Spacer(flex: 1,),
             Icon(
               // Icons.arrow_forward_ios,
               trailingIcon,
               size: defaultSize * 1.6,
               color: kTextLigntColor,
             ),
+            SizedBox(width: size.width*0.03,)
           ],
         ),
       ),

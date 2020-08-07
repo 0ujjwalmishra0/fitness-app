@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app/Screens/Welcome/welcome_screen.dart';
 import 'package:fitness_app/models/custom_route.dart';
-import 'package:fitness_app/pages/LoginScreen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';

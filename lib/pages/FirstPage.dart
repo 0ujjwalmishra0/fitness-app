@@ -1,8 +1,10 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:fitness_app/Screens/Meals/Meals.dart';
 import 'package:fitness_app/constants.dart';
+import 'package:fitness_app/models/DarkTheme.dart';
 import 'package:fitness_app/pages/Insights.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../Screens/Profile/Profile.dart';
 
@@ -36,6 +38,7 @@ class _FirstPageState extends State<FirstPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkTheme = Provider.of<DarkThemeProvider>(context, listen: false).darkTheme;
     return Scaffold(
       body: PageView(
         children: <Widget>[
@@ -47,41 +50,43 @@ class _FirstPageState extends State<FirstPage> {
         onPageChanged: (index) => onPageChanged(index),
         physics: NeverScrollableScrollPhysics(),
       ),
-      bottomNavigationBar: buildCurvedNavigationBar(_bottomNavigationKey, pageIndex, selectPage),
+      bottomNavigationBar:
+          buildCurvedNavigationBar(_bottomNavigationKey, pageIndex, selectPage,isDarkTheme),
     );
   }
 }
 
 // using curved_navigation_bar package
-  CurvedNavigationBar buildCurvedNavigationBar(_bottomNavigationKey,pageIndex,selectPage){
-    return CurvedNavigationBar(
-      buttonBackgroundColor: kbottomNavigationColor,
-        key: _bottomNavigationKey,
-        index: pageIndex,
-        height: 50,
-        color: kbottomNavigationColor,
-        backgroundColor: Colors.white,
-        animationCurve: Curves.easeInOut,
-        animationDuration: Duration(milliseconds: 250),
-        onTap: selectPage,
-           items: [
-          Icon(
-            Icons.home,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.account_circle,
-            color: Colors.white,
-          ),
-        ],
-        );
-  }
+CurvedNavigationBar buildCurvedNavigationBar(
+    _bottomNavigationKey, pageIndex, selectPage,isDarkTheme) {
+  return CurvedNavigationBar(
+    buttonBackgroundColor: kbottomNavigationColor,
+    key: _bottomNavigationKey,
+    index: pageIndex,
+    height: 50,
+    color: kbottomNavigationColor,
+    backgroundColor: isDarkTheme?Colors.black: Colors.white,
+    animationCurve: Curves.easeInOut,
+    animationDuration: Duration(milliseconds: 250),
+    onTap: selectPage,
+    items: [
+      Icon(
+        Icons.home,
+        color: Colors.white,
+      ),
+      Icon(
+        Icons.add,
+        color: Colors.white,
+      ),
+      Icon(
+        Icons.account_circle,
+        color: Colors.white,
+      ),
+    ],
+  );
+}
 
-  /*** previous bottom navigation bar ***/
+/*** previous bottom navigation bar ***/
 // buildBottomNavigation(pageIndex,selectPage){
 //   return BottomNavigationBar(
 //         showSelectedLabels: false,
@@ -105,5 +110,3 @@ class _FirstPageState extends State<FirstPage> {
 //             title: Text('Profile'),
 //           ),],);
 // }
-
-

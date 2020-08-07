@@ -9,7 +9,9 @@ class _InsightsState extends State<Insights> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        brightness: Brightness.dark,
+      ),
       body: Center(child: Text('Area for showing Activity and charts'),),
       
     );

@@ -44,6 +44,7 @@ class Profile extends StatelessWidget {
 Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      
       appBar: buildAppBar(),
       body: Body(),
       // bottomNavigationBar: MyBottomNavBar(),
@@ -94,23 +95,24 @@ Widget build(BuildContext context) {
     AppBar buildAppBar() {
     return AppBar(
       backgroundColor: kPrimaryColor,
+      brightness: Brightness.dark,
       leading: SizedBox(),
       // On Android it's false by default
       centerTitle: true,
       title: Text("Profile"),
-      actions: <Widget>[
-        FlatButton(
-          onPressed: () {},
-          child: Text(
-            "Edit",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: SizeConfig.defaultSize * 1.6, //16
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ],
+      // actions: <Widget>[
+      //   FlatButton(
+      //     onPressed: () {},
+      //     child: Text(
+      //       "Edit",
+      //       style: TextStyle(
+      //         color: Colors.white,
+      //         fontSize: SizeConfig.defaultSize * 1.6, //16
+      //         fontWeight: FontWeight.bold,
+      //       ),
+      //     ),
+      //   ),
+      // ],
     );
   }
 }
