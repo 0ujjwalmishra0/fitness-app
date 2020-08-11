@@ -6,8 +6,8 @@ import 'package:fitness_app/pages/AddMeals.dart';
 import 'package:fitness_app/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 class Meals extends StatelessWidget {
+
   Row showTotalCalorie() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

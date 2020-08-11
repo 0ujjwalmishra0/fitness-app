@@ -35,7 +35,7 @@ class Styles {
    
   static ThemeData themeData(bool isDarkTheme, BuildContext context) {
     return ThemeData(
-      primarySwatch: Colors.red,
+      primarySwatch: Colors.green,
       
       primaryColor: isDarkTheme ? Colors.black : Colors.white,
 
