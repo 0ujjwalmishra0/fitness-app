@@ -5,11 +5,18 @@ import 'package:fitness_app/models/auth.dart';
 import 'package:fitness_app/pages/AddMeals.dart';
 import 'package:fitness_app/pages/FirstPage.dart';
 import 'package:flutter/material.dart';
+
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 var email;
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final appDocumentDirectory = await path_provider.getApplicationDocumentsDirectory();
+  Hive.init(appDocumentDirectory.path);
+
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   email = prefs.getString('email');
@@ -27,8 +34,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-DarkThemeProvider themeChangeProvider = DarkThemeProvider();
+  DarkThemeProvider themeChangeProvider = DarkThemeProvider();
 
   @override
   void initState() {
@@ -36,7 +42,7 @@ DarkThemeProvider themeChangeProvider = DarkThemeProvider();
     getCurrentAppTheme();
   }
 
-  void getCurrentAppTheme() async{
+  void getCurrentAppTheme() async {
     themeChangeProvider.darkTheme =
         await themeChangeProvider.darkThemePreference.getTheme();
   }
@@ -50,8 +56,8 @@ DarkThemeProvider themeChangeProvider = DarkThemeProvider();
         ChangeNotifierProvider.value(value: themeChangeProvider),
       ],
       // create: (context) => Auth(),
-      child: Consumer<DarkThemeProvider>( 
-      // Consumer<Auth>(
+      child: Consumer<DarkThemeProvider>(
+    
         builder: (ctx, auth, child) => MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Fitness App',

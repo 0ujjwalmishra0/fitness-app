@@ -1,6 +1,5 @@
-import 'package:fitness_app/models/Database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitness_app/models/auth.dart';
-import 'package:fitness_app/models/user.dart';
 import 'package:fitness_app/pages/FirstPage.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_app/Screens/Login/login_screen.dart';
@@ -12,38 +11,46 @@ import 'package:fitness_app/components/rounded_button.dart';
 import 'package:fitness_app/components/rounded_input_field.dart';
 import 'package:fitness_app/components/rounded_password_field.dart';
 import 'package:flutter_svg/svg.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
+
 
 class Body extends StatelessWidget with ChangeNotifier {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   FirebaseUser googleUser;
-
+  final usersRef = Firestore.instance.collection('users');
+  final mydoc = Firestore.instance.collection('mydoc');
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   getUser(user) {
     return user;
   }
 
-  database(displayName, email, photoUrl) {
-    var newDBUser = User(
-        age: 0,
-        height: 0,
-        sex: '',
-        weight: 0,
-        displayName: displayName,
-        email: email,
-        photoUrl: photoUrl);
-    DBProvider.db.newUser(newDBUser);
+  var userBox;
+  setLocalData(gmail, displayName, photoUrl) async {
+    // final prefs = await SharedPreferences.getInstance();
+    // prefs.setString("gmail", gmail);
+    // prefs.setString("displayName", displayName);
+    // prefs.setString("photoUrl", photoUrl);
+    // print("inside prefs gmail is: $gmail");
+    userBox = await Hive.openBox('userBox');
+    userBox.put('email', gmail);
+    userBox.put('displayName', displayName);
+    userBox.put('photoUrl', photoUrl);
   }
 
-  setLocalData(gmail, displayName, photoUrl) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString("gmail", gmail);
-    prefs.setString("displayName", displayName);
-    prefs.setString("photoUrl", photoUrl);
-    print("inside prefs gmail is: $gmail");
+  setFirebaseData(user) async {
+    // final id = usersRef.document().documentID;
+    usersRef.document(user.uid).setData({
+      'id': user.uid,
+      'displayName': user.displayName,
+      'photoUrl': user.photoUrl,
+      'email': user.email,
+    });
+   
   }
 
   @override
@@ -64,13 +71,37 @@ class Body extends StatelessWidget with ChangeNotifier {
               "assets/icons/signup.svg",
               height: size.height * 0.35,
             ),
-            RoundedInputField(
-              hintText: "Your Email",
-              onChanged: (value) {},
+            // RoundedInputField(
+            //   hintText: "Your Email",
+            //   onChanged: (value) {},
+            // ),
+            TextFormField(
+              controller: emailController,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14.0),
+                prefixIcon: Icon(
+                  Icons.account_circle,
+                  color: Colors.white,
+                ),
+                hintText: 'Enter your email',
+              ),
             ),
-            RoundedPasswordField(
-              onChanged: (value) {},
+            TextFormField(
+              controller: passwordController,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14.0),
+                prefixIcon: Icon(
+                  Icons.account_circle,
+                  color: Colors.white,
+                ),
+                hintText: 'Enter your password',
+              ),
             ),
+            // RoundedPasswordField(
+            //   onChanged: (value) {},
+            // ),
             RoundedButton(
               text: "SIGNUP",
               press: () {},
@@ -109,10 +140,8 @@ class Body extends StatelessWidget with ChangeNotifier {
                         .then((FirebaseUser user) {
                       // getUser(user);
                       // googleUser = user;
+                      setFirebaseData(user);
                       setLocalData(user.email, user.displayName, user.photoUrl);
-                      database(user.displayName, user.email, user.photoUrl);
-                      // print(user.displayName);
-                      // print(user.photoUrl);
 
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
@@ -127,5 +156,21 @@ class Body extends StatelessWidget with ChangeNotifier {
         ),
       ),
     );
+  }
+
+  signUpUsingEmail(String email, String password, BuildContext context) {
+    FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+            email: emailController.text, password: passwordController.text)
+        .then((signedInUser) async {
+      setFirebaseData(signedInUser.user);
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    userBox.close();
+    super.dispose();
   }
 }

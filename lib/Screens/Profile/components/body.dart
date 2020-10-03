@@ -2,10 +2,9 @@ import 'package:fitness_app/Screens/Profile/BasicInformation.dart';
 import 'package:fitness_app/Screens/Profile/components/info.dart';
 import 'package:fitness_app/Screens/Profile/components/profile_menu_item.dart';
 import 'package:fitness_app/Screens/Profile/goal.dart';
-import 'package:fitness_app/components/listTile.dart';
+
 import 'package:fitness_app/constants.dart';
 import 'package:fitness_app/models/DarkTheme.dart';
-import 'package:fitness_app/models/Database.dart';
 import 'package:fitness_app/models/auth.dart';
 import 'package:fitness_app/models/custom_route.dart';
 import 'package:fitness_app/size_config.dart';
