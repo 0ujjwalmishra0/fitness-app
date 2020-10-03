@@ -4,10 +4,15 @@ import 'package:fitness_app/Screens/Profile/BasicInformation.dart';
 import 'package:fitness_app/constants.dart';
 import 'package:fitness_app/models/custom_route.dart';
 import 'package:fitness_app/size_config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './components/body.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatelessWidget {
+  String name;
+  String email;
+  String imageUrl;
+
   void handleTap(BuildContext context) {
     Navigator.of(context)
         .push(CustomRoute(builder: (ctx) => BasicInformation()));
@@ -23,6 +28,12 @@ class Profile extends StatelessWidget {
   }
 
   Widget buildProfileRow(Size size) {
+    SharedPreferences.getInstance().then((value) {
+       name = value.getString('name');
+       email = value.getString('email');
+       imageUrl = value.getString('imageUrl');
+    });
+
     return Row(
       children: <Widget>[
         CircularProfileAvatar(
@@ -32,19 +43,20 @@ class Profile extends StatelessWidget {
           radius: 50,
           child: CircleAvatar(
             backgroundImage: CachedNetworkImageProvider(
-                "https://scontent-vie1-1.cdninstagram.com/v/t51.2885-19/101292696_278815523249225_1135093752491147264_n.jpg?_nc_ht=scontent-vie1-1.cdninstagram.com&_nc_ohc=sCh_E0GkJ8cAX_HkBB0&oh=005798e859b99e2c95e60ea9aa8efc8f&oe=5F51237F"
+              imageUrl
+                // "https://scontent-vie1-1.cdninstagram.com/v/t51.2885-19/101292696_278815523249225_1135093752491147264_n.jpg?_nc_ht=scontent-vie1-1.cdninstagram.com&_nc_ohc=sCh_E0GkJ8cAX_HkBB0&oh=005798e859b99e2c95e60ea9aa8efc8f&oe=5F51237F"
                 ),
           ),
         ),
         SizedBox(width: size.width * 0.05),
-        Text('Ujjwal Mishra'),
+        Text(name),
       ],
     );
   }
-Widget build(BuildContext context) {
+
+  Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      
       appBar: buildAppBar(),
       body: Body(),
       // bottomNavigationBar: MyBottomNavBar(),
@@ -58,7 +70,7 @@ Widget build(BuildContext context) {
   //     endDrawer: AppDrawer("ujjwal"),
   //     appBar: AppBar(title: Text('Profile'),
   //     centerTitle: true,
-      
+
   //     ),
   //     body: Padding(
   //       padding: const EdgeInsets.all(11.0),
@@ -92,7 +104,7 @@ Widget build(BuildContext context) {
   //     ),
   //   );
   // }
-    AppBar buildAppBar() {
+  AppBar buildAppBar() {
     return AppBar(
       backgroundColor: kPrimaryColor,
       brightness: Brightness.dark,

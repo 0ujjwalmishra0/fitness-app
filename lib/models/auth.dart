@@ -13,6 +13,7 @@ class Auth with ChangeNotifier {
   String name;
   String email;
   String imageUrl;
+  String currentUid;
 
   Future<FirebaseUser> signInWithGoogle() async {
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
@@ -38,11 +39,15 @@ class Auth with ChangeNotifier {
     name = user.displayName;
     email = user.email;
     imageUrl = user.photoUrl;
+    currentUid = user.uid;
 
     final FirebaseUser currentUser = await _auth.currentUser();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('email', email);
+    prefs.setString('currentUid', currentUid);
+    prefs.setString('name', name);
+    prefs.setString('imageUrl', imageUrl);
 
     assert(user.uid == currentUser.uid);
 
@@ -53,10 +58,19 @@ class Auth with ChangeNotifier {
     await googleSignIn.signOut().then((value) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.remove('email');
-      });
-      Navigator.of(context).pushReplacement(CustomRoute(builder:(ctx)=> WelcomeScreen()));
-    
+      prefs.remove('currentUid');
+      prefs.remove('name');
+      prefs.remove('imageUrl');
+    });
+    Navigator.of(context)
+        .pushReplacement(CustomRoute(builder: (ctx) => WelcomeScreen()));
 
     print("User Sign Out");
+  }
+
+  getCurrenUser() async {
+    final FirebaseUser user = await _auth.currentUser();
+    final uid = user.uid;
+    return uid;
   }
 }
