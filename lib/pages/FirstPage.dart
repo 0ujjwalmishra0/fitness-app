@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 import '../Screens/Profile/Profile.dart';
 
 class FirstPage extends StatefulWidget {
+  String id;
+  FirstPage(this.id);
   @override
   _FirstPageState createState() => _FirstPageState();
 }
@@ -38,34 +40,35 @@ class _FirstPageState extends State<FirstPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkTheme = Provider.of<DarkThemeProvider>(context, listen: false).darkTheme;
+    bool isDarkTheme =
+        Provider.of<DarkThemeProvider>(context, listen: false).darkTheme;
     return Scaffold(
       body: PageView(
         children: <Widget>[
-          Meals(),
+          Meals(widget.id),
           Insights(),
-          Profile(),
+          Profile(widget.id),
         ],
         controller: pageController,
         onPageChanged: (index) => onPageChanged(index),
         physics: NeverScrollableScrollPhysics(),
       ),
-      bottomNavigationBar:
-          buildCurvedNavigationBar(_bottomNavigationKey, pageIndex, selectPage,isDarkTheme),
+      bottomNavigationBar: buildCurvedNavigationBar(
+          _bottomNavigationKey, pageIndex, selectPage, isDarkTheme),
     );
   }
 }
 
 // using curved_navigation_bar package
 CurvedNavigationBar buildCurvedNavigationBar(
-    _bottomNavigationKey, pageIndex, selectPage,isDarkTheme) {
+    _bottomNavigationKey, pageIndex, selectPage, isDarkTheme) {
   return CurvedNavigationBar(
     buttonBackgroundColor: kbottomNavigationColor,
     key: _bottomNavigationKey,
     index: pageIndex,
     height: 50,
     color: kbottomNavigationColor,
-    backgroundColor: isDarkTheme?Colors.black: Colors.white,
+    backgroundColor: isDarkTheme ? Colors.black : Colors.white,
     animationCurve: Curves.easeInOut,
     animationDuration: Duration(milliseconds: 250),
     onTap: selectPage,

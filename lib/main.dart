@@ -2,7 +2,7 @@ import 'package:fitness_app/Screens/Signup/components/body.dart' as signupBody;
 import 'package:fitness_app/Screens/Welcome/welcome_screen.dart';
 import 'package:fitness_app/models/DarkTheme.dart';
 import 'package:fitness_app/models/auth.dart';
-import 'package:fitness_app/pages/AddMeals.dart';
+import 'package:fitness_app/Screens/Meals/AddMeals.dart';
 import 'package:fitness_app/pages/FirstPage.dart';
 import 'package:flutter/material.dart';
 
@@ -12,15 +12,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
 var email;
+String uid;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final appDocumentDirectory = await path_provider.getApplicationDocumentsDirectory();
+  final appDocumentDirectory =
+      await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDocumentDirectory.path);
 
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   email = prefs.getString('email');
+  uid = prefs.getString('currentUid');
   print("login:" + email.toString());
+  // Open the database and store the reference.
+  // final Future<Database> database = openDatabase(
+  // // Set the path to the database. Note: Using the `join` function from the
+  // // `path` package is best practice to ensure the path is correctly
+  // // constructed for each platform.
+  // join(await getDatabasesPath(), 'doggie_database.db'),
+// );
   runApp(MyApp());
 }
 
@@ -57,11 +67,10 @@ class _MyAppState extends State<MyApp> {
       ],
       // create: (context) => Auth(),
       child: Consumer<DarkThemeProvider>(
-    
         builder: (ctx, auth, child) => MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Fitness App',
-          home: email == null ? WelcomeScreen() : FirstPage(),
+          home: email == null ? WelcomeScreen() : FirstPage(uid),
           theme: Styles.themeData(themeChangeProvider.darkTheme, context),
           // theme: ThemeData(
           //   brightness: Brightness.light,

@@ -7,10 +7,10 @@ class User {
   String displayName;
   String email;
   String photoUrl;
-  int height;
-  int weight;
+  double height;
+  double weight;
   int age;
-  String sex;
+  int gender;
   User({
     this.displayName,
     this.email,
@@ -18,7 +18,7 @@ class User {
     this.photoUrl,
     this.weight,
     this.age,
-    this.sex,
+    this.gender,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,7 +29,7 @@ class User {
       'height': height,
       'weight': weight,
       'age': age,
-      'sex': sex,
+      'gender': gender,
     };
     return map;
   }
@@ -38,10 +38,10 @@ class User {
     displayName = map['displayName'];
     email = map['email'];
     photoUrl = map['photoUrl'];
-    height = map['height'];
+    height = map['height'] as double;
     weight = map['weight'];
     age = map['age'];
-    sex = map['sex'];
+    gender = map['gender'];
   }
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -51,6 +51,6 @@ class User {
         height: json['height'],
         weight: json['weight'],
         age: json['age'],
-        sex: json['sex'],
+        gender: json['gender'],
       );
 }

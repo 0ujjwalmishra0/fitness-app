@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:fitness_app/Screens/Profile/editProfile.dart';
 import 'package:fitness_app/models/auth.dart';
+import 'package:fitness_app/models/custom_route.dart';
+import 'package:fitness_app/models/user.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,6 +16,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BasicInformation extends StatefulWidget {
+  String profileId;
+  BasicInformation(this.profileId);
   @override
   _BasicInformationState createState() => _BasicInformationState();
 }
@@ -28,11 +35,22 @@ class _BasicInformationState extends State<BasicInformation> {
   TextEditingController heightController = TextEditingController();
   TextEditingController weightController = TextEditingController();
   TextEditingController bmiController = TextEditingController();
+  String name;
+  String email;
+  String height;
+  String weight;
+  String bmi;
   DocumentSnapshot profile;
+  User user;
+
   @override
   void initState() {
+    getUserData().then((result) {
+      setState(() {
+        profile = result;
+      });
+    });
     super.initState();
-    // open();
   }
 
   // open() async {
@@ -69,22 +87,39 @@ class _BasicInformationState extends State<BasicInformation> {
     });
   }
 
-  getData() async {
+  getUserData() async {
+    return await databaseRef
+        .collection('users')
+        .document(widget.profileId)
+        .get();
+  }
+
+  Future<User> getData() async {
+    if (this.user != null) return user;
+
     databaseRef.collection('users').document(uid).get().then((value) {
       print(value.data);
-      final height = value.data['height'];
-      final weight = value.data['weight'];
-      final bmi = weight * 10000 / (height * height);
+      user = User.fromMap(value.data);
 
-      nameController.text = value.data['displayName'];
-      emailController.text = value.data['email'];
-      heightController.text = height.toString();
-      weightController.text = weight.toString();
-      bmiController.text = bmi.toStringAsFixed(2);
-      setState(() {
-        // selectedRadio = value.data['gender'];
-        profile = value;
-      });
+      print('height is : ${user.displayName}');
+      name = user.displayName;
+      email = user.email;
+      height = user.height.toString();
+      weight = user.weight.toString();
+      bmi = (user.weight / (user.height * user.height)).toStringAsFixed(2);
+      selectedRadio = value.data['gender'];
+      return user;
+
+      // final varheight = value.data['height'];
+      // final varweight = value.data['weight'];
+      // final varbmi = varweight * 10000 / (varheight * varheight);
+
+      // name = value.data['displayName'];
+      // email = value.data['email'];
+      // height = varheight.toString();
+      // weight = varweight.toString();
+      // bmi = varbmi.toStringAsFixed(2);
+      // selectedRadio = value.data['gender'];
     });
   }
 
@@ -110,64 +145,14 @@ class _BasicInformationState extends State<BasicInformation> {
     }
   }
 
-  Widget buildBasicInformation(
-      String text, IconData icon, Size size, controller) {
-    return Row(
-      children: <Widget>[
-        Icon(icon),
-        SizedBox(
-          width: size.width * 0.04,
-        ),
-        TextFieldContainer(
-          child: TextField(
-            enabled: text == 'BMI' ? false : true,
-            controller: controller,
-            onSubmitted: (_) {
-              box.put(text: controller.text);
-            },
-            cursorColor: kPrimaryColor,
-            decoration: InputDecoration(
-              hintText: text,
-              border: InputBorder.none,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget buildChooseGender(Size size) {
-    // bool isMale = true;
-    return Row(
-      children: <Widget>[
-        Icon(Icons.access_alarm),
-        // SizedBox(width: size.width*0.1,),
-        Container(
-          width: size.width * 0.375,
-          margin: EdgeInsets.only(left: 18),
-          child: RoundedButton(
-            text: 'Male',
-            press: () {
-              // isMale = true;
-            },
-            // color: isMale ? kPrimaryColor : kPrimaryLightColor,
-          ),
-        ),
-        SizedBox(
-          width: size.width * 0.05,
-        ),
-        Container(
-            width: size.width * 0.375,
-            child: RoundedButton(
-              text: 'Female',
-              press: () {
-                // isMale = false;
-              },
-              // color: isMale ?kPrimaryLightColor: kPrimaryColor,
-            )),
-
-        // RoundedButton(text: 'Female',),
-      ],
+  Widget buildInfo(String text, IconData icon, String infoType) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(text),
+      subtitle: Text(infoType==null ? '': infoType,
+          style: TextStyle(fontSize: 16, color: Colors.green)),
+      visualDensity: VisualDensity.compact,
+      onTap: () => editProfilePage(text, infoType),
     );
   }
 
@@ -224,62 +209,60 @@ class _BasicInformationState extends State<BasicInformation> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: FutureBuilder(
-            future: getData(),
-            builder: (context, snapshot) {
-              // switch (snapshot.connectionState) {
-              // case ConnectionState.none:
-              //   return Container();
-              // case ConnectionState.waiting:
-              //   return Container();
-              // case ConnectionState.active:
-              // case ConnectionState.done:
-              if (snapshot.connectionState == ConnectionState.none &&
-                  !snapshot.data) {
-                return Container();
-              }
-              return Column(
-                // children: <Widget>[
-                //   buildBasicInformation(
-                //     'Name',
-                //     Icons.account_circle,
-                //     size,
-                //     nameController,
-                //   ),
-                //   // buildChooseGender(size),
-                //   buildGender(size),
-                //   buildBasicInformation(
-                //     'Email',
-                //     Icons.account_circle,
-                //     size,
-                //     emailController,
-                //   ),
-                //   buildBasicInformation(
-                //     'Height',
-                //     Icons.account_circle,
-                //     size,
-                //     heightController,
-                //   ),
-                //   buildBasicInformation(
-                //     'Weight',
-                //     Icons.account_circle,
-                //     size,
-                //     weightController,
-                //   ),
-                //   buildBasicInformation(
-                //     'BMI',
-                //     Icons.account_circle,
-                //     size,
-                //     bmiController,
-                //   ),
-                // ],
-              );
-            },
+            padding: const EdgeInsets.all(15.0),
+            child: (profile != null)
+                ? Column(
+                    children: <Widget>[
+                      buildInfo('Name', Icons.account_circle,
+                          profile.data['displayName']),
+                      buildInfo(
+                          'Email', Icons.account_circle, profile.data['email']),
+                      buildInfo('Height(cm)', Icons.account_circle,
+                          profile.data['height'].toString()),
+                      buildInfo('Weight(Kg)', Icons.account_circle,
+                          profile.data['weight'].toString()),
+                      buildInfo(
+                          'BMI',
+                          Icons.account_circle,(profile.data['weight']*10000 /
+                                  (profile.data['height'] *
+                                      profile.data['height']))
+                              .toStringAsFixed(2)),
 
-            // },
-          ),
-        ),
+                      //TODO: for adding gender        
+                      // buildGender(size),
+                    ],
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
+                  )
+
+            // FutureBuilder(
+            //   future: getData(),
+            //   builder: (context, snapshot) {
+            //     print(snapshot.connectionState.toString());
+            //     print(snapshot.hasData);
+            //     if (snapshot.connectionState == ConnectionState.waiting ||
+            //         snapshot.hasData == null) {
+            //       return Center(child: CircularProgressIndicator());
+            //     } else {
+            //       if (snapshot.error != null) {
+            //         return Text('an error occurred ${snapshot.error}');
+            //       } else {
+            //         return Column(
+            //           children: <Widget>[
+            //             buildInfo('Name', Icons.account_circle, name),
+            //             buildInfo('Email', Icons.account_circle, email),
+            //             buildInfo('Height', Icons.account_circle, height),
+            //             buildInfo('Weight', Icons.account_circle, weight),
+            //             buildInfo('BMI', Icons.account_circle, bmi),
+            //             buildGender(size),
+            //           ],
+            //         );
+            //       }
+            //     }
+            //   },
+            // ),
+            ),
       ),
       bottomNavigationBar: Container(
         height: size.height * 0.065,
@@ -312,5 +295,18 @@ class _BasicInformationState extends State<BasicInformation> {
         ),
       ),
     );
+  }
+
+  editProfilePage(String text, String infoType) {
+    if (text != 'BMI')
+      Navigator.of(context).push(
+        CustomRoute(
+          builder: (context) => EditProfile(
+            text: text,
+            infoType: infoType,
+            userId: uid,
+          ),
+        ),
+      );
   }
 }

@@ -12,10 +12,12 @@ class Profile extends StatelessWidget {
   String name;
   String email;
   String imageUrl;
+  String profileId;
+  Profile(this.profileId);
 
   void handleTap(BuildContext context) {
     Navigator.of(context)
-        .push(CustomRoute(builder: (ctx) => BasicInformation()));
+        .push(CustomRoute(builder: (ctx) => BasicInformation(profileId)));
   }
 
   Widget buildColumn(String title, String subtitle, IconData icon) {
@@ -29,9 +31,9 @@ class Profile extends StatelessWidget {
 
   Widget buildProfileRow(Size size) {
     SharedPreferences.getInstance().then((value) {
-       name = value.getString('name');
-       email = value.getString('email');
-       imageUrl = value.getString('imageUrl');
+      name = value.getString('name');
+      email = value.getString('email');
+      imageUrl = value.getString('imageUrl');
     });
 
     return Row(
@@ -42,8 +44,7 @@ class Profile extends StatelessWidget {
           // maxRadius: 50,
           radius: 50,
           child: CircleAvatar(
-            backgroundImage: CachedNetworkImageProvider(
-              imageUrl
+            backgroundImage: CachedNetworkImageProvider(imageUrl
                 // "https://scontent-vie1-1.cdninstagram.com/v/t51.2885-19/101292696_278815523249225_1135093752491147264_n.jpg?_nc_ht=scontent-vie1-1.cdninstagram.com&_nc_ohc=sCh_E0GkJ8cAX_HkBB0&oh=005798e859b99e2c95e60ea9aa8efc8f&oe=5F51237F"
                 ),
           ),
@@ -58,7 +59,7 @@ class Profile extends StatelessWidget {
     SizeConfig().init(context);
     return Scaffold(
       appBar: buildAppBar(),
-      body: Body(),
+      body: Body(profileId),
       // bottomNavigationBar: MyBottomNavBar(),
     );
   }

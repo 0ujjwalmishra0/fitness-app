@@ -25,6 +25,7 @@ dependencies:
   curved_navigation_bar: ^0.3.3
   flutter_svg: ^0.19.0
   sqflite:
+  path:
   lite_rolling_switch: ^0.1.1
   barcode_scan:
   url_launcher:

@@ -2,9 +2,13 @@ import 'package:fitness_app/models/nutrient.dart';
 import 'dart:typed_data';
 import 'package:hive/hive.dart';
 
+import 'package:sqflite/sqflite.dart';
+import 'dart:async';
+import 'package:path/path.dart';
 part 'food.g.dart';
 
-@HiveType(typeId: 0)
+
+// @HiveType(typeId: 0)
 class Food {
   int id;
   String name;
@@ -13,7 +17,7 @@ class Food {
   Uint8List matchinfo;
   bool favourite;
   int totalPages;
-  @HiveField(1)
+  // @HiveField(1)
   List<Nutrient> nutrients;
 
   // final Nutrient protein;
@@ -121,4 +125,33 @@ class Food {
       nutrients: nutrients,
     );
   }
+
+
+  factory Food.fromMap(Map<String, dynamic> json) {
+    var nutrientsJson = json['foodNutrients'] as List;
+    List<Nutrient> nutrients = nutrientsJson != null
+        ? nutrientsJson.map((i) => Nutrient.fromJson(i)).toList()
+        : null;
+
+    return new Food(
+      id: json["fdcId"],
+      name: json["description"],
+      nutrients: nutrients,
+    );
+  }
+
+  
+  Map<String, dynamic> toMap() {
+    return {
+      // 'id': id,
+      "name": this.name,
+      // 'nutrients': nutrients,
+    };
+  }
+
+
+
+ 
+
+
 }

@@ -13,8 +13,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class Body extends StatefulWidget {
+  String profileId;
+  Body(this.profileId);
   @override
   _BodyState createState() => _BodyState();
 }
@@ -24,15 +25,14 @@ class _BodyState extends State<Body> {
   String email;
   String imageUrl;
 
- 
   Future getLocalData() async {
     SharedPreferences.getInstance().then((value) {
-       name = value.getString('name');
-       email = value.getString('email');
-       imageUrl = value.getString('imageUrl');
+      name = value.getString('name');
+      email = value.getString('email');
+      imageUrl = value.getString('imageUrl');
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     // final user = Provider.of<signupBody.Body>(context, listen: false);
@@ -77,7 +77,7 @@ class _BodyState extends State<Body> {
     return SingleChildScrollView(
       child: FutureBuilder(
         future: getLocalData(),
-        
+
         builder: (context, userData) {
           switch (userData.connectionState) {
             case ConnectionState.none:
@@ -86,7 +86,6 @@ class _BodyState extends State<Body> {
               return Container();
             case ConnectionState.active:
             case ConnectionState.done:
-              
               return Column(
                 children: <Widget>[
                   Info(
@@ -110,7 +109,7 @@ class _BodyState extends State<Body> {
                     title: "Basic Information",
                     press: () {
                       Navigator.of(context).push(
-                          CustomRoute(builder: (ctx) => BasicInformation()));
+                          CustomRoute(builder: (ctx) => BasicInformation(widget.profileId)));
                     },
                   ),
                   ProfileMenuItem(

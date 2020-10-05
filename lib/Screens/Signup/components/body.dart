@@ -145,7 +145,7 @@ class Body extends StatelessWidget with ChangeNotifier {
 
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
-                        return FirstPage();
+                        return FirstPage(user.uid);
                       }));
                     });
                   },

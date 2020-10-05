@@ -1,8 +1,15 @@
+import 'package:fitness_app/models/Database1.dart';
+import 'package:fitness_app/models/auth.dart';
+import 'package:fitness_app/models/nutrient.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../models/food.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+final foodRef = Firestore.instance.collection('foods');
 
 class MealDetail extends StatefulWidget {
-  final Food mealfood;
+  Food mealfood;
   final String name;
   MealDetail({this.mealfood, this.name});
 
@@ -12,8 +19,34 @@ class MealDetail extends StatefulWidget {
 
 class _MealDetailState extends State<MealDetail> {
   TextEditingController _quantity = TextEditingController();
-  var newfood;
+  String uid;
+  DBProvider _dbProvider;
   double multiplier;
+  Food newFood;
+  List<Food> foods = [];
+
+  Nutrient protein;
+  Nutrient fats;
+  Nutrient carbohydrate;
+  Nutrient energy;
+  Nutrient sugar;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void createRecord() async {
+    await foodRef.document(uid).collection('food').add({
+      'name': widget.mealfood.name,
+      'protein': protein.value,
+      'carbohydrate': carbohydrate.value,
+      'energy': energy.value,
+      'sugar': sugar.value,
+      'fats': fats.value,
+      'multiplier': multiplier?? 1,
+    });
+  }
+
   buildQuantity() {
     return TextFormField(
         autofocus: true,
@@ -52,7 +85,8 @@ class _MealDetailState extends State<MealDetail> {
     } else {
       //if multiplier is null, restore values to original value
       value = nutrient.value;
-      print(value);
+      print(nutrient.name);
+      // print(value);
     }
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
@@ -73,14 +107,15 @@ class _MealDetailState extends State<MealDetail> {
     //  widget.mealfood.nutrients.forEach((element) {
     //   print(element.name);
     // });
-
+    final user = Provider.of<Auth>(context, listen: false);
+    user.getCurrenUser().then((id) => uid = id);
     final height = MediaQuery.of(context).size.height;
 
-    final protein = (widget.mealfood.nutrients[8]);
-    final fats = (widget.mealfood.nutrients[0]);
-    final carbohydrate = (widget.mealfood.nutrients[9]);
-    final fiber = (widget.mealfood.nutrients[10]);
-    final sugar = (widget.mealfood.nutrients[11]);
+    protein = (widget.mealfood.nutrients[8]);
+    fats = (widget.mealfood.nutrients[0]);
+    carbohydrate = (widget.mealfood.nutrients[9]);
+    energy = (widget.mealfood.nutrients[10]);
+    sugar = (widget.mealfood.nutrients[11]);
 
     return Scaffold(
       appBar: AppBar(
@@ -92,14 +127,41 @@ class _MealDetailState extends State<MealDetail> {
           children: [
             Text('Pick the quantity of Food'),
             buildQuantity(),
-            SizedBox(height: height*0.05),
+            SizedBox(height: height * 0.05),
             Text('Nutritional Information'),
-            SizedBox(height: height*0.04),
+            SizedBox(height: height * 0.04),
             buildInfo(protein),
             buildInfo(fats),
             buildInfo(carbohydrate),
             buildInfo(sugar),
-            buildInfo(fiber),
+            buildInfo(energy),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                RaisedButton(
+                  onPressed: () async {
+                    newFood = Food(name: widget.mealfood.name);
+                    print(newFood.name);
+                    await _dbProvider.addFood(newFood);
+                  },
+                  child: Text('Add'),
+                ),
+                RaisedButton(
+                  onPressed: () async {
+                    //TODO:ADD food to firestore
+                    createRecord();
+
+                    //TODO: ADD food to sql
+                    // List<Food> myFoods = await _dbProvider.getAllFoods();
+
+                    // myFoods.forEach((element) {
+                    //   print(element);
+                    // });
+                  },
+                  child: Text('Add to cloud'),
+                ),
+              ],
+            )
           ],
         ),
       ),
