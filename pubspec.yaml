@@ -35,6 +35,8 @@ dependencies:
   cloud_firestore: ^0.13.4+2
   firebase_storage: ^3.1.5
   charts_flutter: ^0.9.0
+  tflite: ^1.0.5
+  image_picker: ^0.6.3
   # cloud_firestore: ^0.13.7
   # firebase_storage: ^3.1.5
   # firebase_core: ^0.4.4
@@ -82,6 +84,7 @@ flutter:
         - asset: assets/fonts/MyFlutterApp.ttf
     
   assets:
+    - assets/
     - assets/images/
     - assets/icons/
     - assets/icons2/

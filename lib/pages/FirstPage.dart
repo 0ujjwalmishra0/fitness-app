@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:fitness_app/Screens/Meals/Meals.dart';
 import 'package:fitness_app/constants.dart';
 import 'package:fitness_app/models/DarkTheme.dart';
+import 'package:fitness_app/pages/Detect.dart';
 import 'package:fitness_app/pages/Insights.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -47,6 +48,7 @@ class _FirstPageState extends State<FirstPage> {
         children: <Widget>[
           Meals(widget.id),
           Insights(),
+          Detect(),
           Profile(widget.id),
         ],
         controller: pageController,
@@ -79,6 +81,10 @@ CurvedNavigationBar buildCurvedNavigationBar(
       ),
       Icon(
         Icons.add,
+        color: Colors.white,
+      ),
+      Icon(
+        Icons.camera_alt,
         color: Colors.white,
       ),
       Icon(
