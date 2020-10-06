@@ -25,6 +25,7 @@ class _BodyState extends State<Body> {
   String email;
   String imageUrl;
 
+ 
   Future getLocalData() async {
     SharedPreferences.getInstance().then((value) {
       name = value.getString('name');
@@ -77,7 +78,6 @@ class _BodyState extends State<Body> {
     return SingleChildScrollView(
       child: FutureBuilder(
         future: getLocalData(),
-
         builder: (context, userData) {
           switch (userData.connectionState) {
             case ConnectionState.none:

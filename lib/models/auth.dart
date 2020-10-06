@@ -15,10 +15,6 @@ class Auth with ChangeNotifier {
   String imageUrl;
   String currentUid;
 
-  String get getCurrentId {
-    return currentUid;
-  }
-
   Future<FirebaseUser> signInWithGoogle() async {
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
