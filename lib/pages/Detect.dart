@@ -15,6 +15,18 @@ class _DetectState extends State<Detect> {
   double _imageHeight;
   var _recognitions;
 
+
+  @override
+  void initState() {
+    super.initState();
+
+    loadModel().then((val) {
+      setState(() {});
+    });
+  }
+
+
+ 
   loadModel() async {
     Tflite.close();
     try {
@@ -24,8 +36,11 @@ class _DetectState extends State<Detect> {
         labels: "assets/labels.txt",
       );
       print(res);
-    } on PlatformException {
+    }
+    //on PlatformException 
+    catch (e) {
       print("Failed to load the model");
+      print(e);
     }
   }
 
@@ -78,15 +93,6 @@ class _DetectState extends State<Detect> {
     if (image == null) return;
     setState(() {});
     sendImage(image);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    loadModel().then((val) {
-      setState(() {});
-    });
   }
 
   Widget printValue(rcg) {
