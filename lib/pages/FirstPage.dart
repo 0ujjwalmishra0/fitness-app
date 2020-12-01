@@ -47,7 +47,7 @@ class _FirstPageState extends State<FirstPage> {
       body: PageView(
         children: <Widget>[
           Meals(widget.id),
-          Insights(),
+          Insights(widget.id),
           Detect(),
           Profile(widget.id),
         ],

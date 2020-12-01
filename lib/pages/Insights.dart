@@ -4,16 +4,45 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/services.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:fitness_app/pages/dummy.dart';
 
+import 'package:fitness_app/models/custom_route.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+
+final foodRef = Firestore.instance.collection('foods');
 
 class Insights extends StatefulWidget {
+  String uid;
+  Insights(this.uid);
   @override
   _InsightsState createState() => _InsightsState();
 }
 
 class _InsightsState extends State<Insights> {
+  var foods;
+
+  @override
+  void initState() {
+    getData().then((result) {
+      setState(() {
+        foods = result;
+      });
+    });
+    super.initState();
+  }
+
+  getData() async {
+    return await foodRef
+        .document(widget.uid)
+        .collection('Lunch')
+        .getDocuments();
+  }
+
   var result = "Hey there !";
   String name;
   String desc;
@@ -24,6 +53,32 @@ class _InsightsState extends State<Insights> {
   int sugar;
   int fats;
   bool status;
+  List<FoodData> foodList = [];
+  double totalEnergy = 0;
+
+  calcEnergy() {
+    double res = 0;
+
+    final DateTime now = DateTime.now();
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final String currDate = formatter.format(now);
+
+    for (var i = 0; i < foods.documents.length; i++) {
+      res += (foods.documents[i].data['energy']);
+
+      int timeInMillis = foods.documents[i].data['time'].seconds;
+      var date = DateTime.fromMillisecondsSinceEpoch(timeInMillis);
+      var formattedDate = DateFormat.yMd().format(date);
+      print(formattedDate);
+      print(currDate);
+      // if (currDate == formattedDate) {
+      //   print("yes");
+      // } else {
+      //   print("false");
+      // }
+    }
+    print(res);
+  }
 
   _launchURL(String url) async {
     // const url = 'https://flutter.dev';
@@ -33,7 +88,6 @@ class _InsightsState extends State<Insights> {
       throw 'Could not launch $url';
     }
   }
-
 
   getApi(String qr) async {
     var url =
@@ -146,19 +200,45 @@ class _InsightsState extends State<Insights> {
         brightness: Brightness.dark,
       ),
       body: Center(
-        child: showInformation(name, desc),
-        // Text(
-        //   result,
-        //   style: new TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
-        // ),
+        // child: showInformation(name, desc),
+        child: Container(
+          height: 400,
+          width: 300,
+          child: SfCartesianChart(
+            primaryXAxis: CategoryAxis(),
+            title: ChartTitle(text: 'data'),
+            // legend: Legend(isVisible: true),
+            tooltipBehavior: TooltipBehavior(enable: true),
+            series: <LineSeries<FoodData, String>>[
+              // Initialize line series.
+              LineSeries<FoodData, String>(
+                  dataSource: [
+                    FoodData('Jan', 35),
+                    FoodData('Feb', 28),
+                    FoodData('Mar', 34),
+                    FoodData('Apr', 32),
+                    FoodData('May', 40)
+                  ],
+                  xValueMapper: (FoodData food, _) => food.day,
+                  yValueMapper: (FoodData food, _) => food.cal,
+                  dataLabelSettings: DataLabelSettings(isVisible: true)),
+            ],
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-          icon: Icon(Icons.camera_alt),
-          label: Text("Scan"),
-          onPressed: scanQR,
-
-          ),
+        icon: Icon(Icons.camera_alt),
+        label: Text("Scan"),
+        onPressed: calcEnergy,
+        // scanQR,
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
+}
+
+class FoodData {
+  FoodData(this.day, this.cal);
+  final String day;
+  final double cal;
 }
