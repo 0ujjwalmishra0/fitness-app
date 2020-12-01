@@ -1,8 +1,18 @@
+import 'dart:convert';
+
 import 'dart:io';
+import 'package:fitness_app/Screens/Meals/AddMeals.dart';
+import 'package:fitness_app/constants.dart';
+import 'package:fitness_app/models/custom_route.dart';
+import 'package:fitness_app/pages/AddMeals(copy).dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:tflite/tflite.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:fitness_app/models/food.dart';
+import 'package:http/http.dart' as http;
+import 'AddMeals.dart' as addmeals;
+
+import 'package:fitness_app/Screens/Meals/MealDetail.dart';
 
 class Detect extends StatefulWidget {
   @override
@@ -14,7 +24,7 @@ class _DetectState extends State<Detect> {
   double _imageWidth;
   double _imageHeight;
   var _recognitions;
-
+  bool detected = false;
 
   @override
   void initState() {
@@ -25,8 +35,8 @@ class _DetectState extends State<Detect> {
     });
   }
 
+  AddMealsState obj = AddMealsState();
 
- 
   loadModel() async {
     Tflite.close();
     try {
@@ -37,7 +47,7 @@ class _DetectState extends State<Detect> {
       );
       print(res);
     }
-    //on PlatformException 
+    //on PlatformException
     catch (e) {
       print("Failed to load the model");
       print(e);
@@ -59,6 +69,7 @@ class _DetectState extends State<Detect> {
 
     setState(() {
       _recognitions = recognitions;
+      detected = true;
     });
   }
 
@@ -174,17 +185,17 @@ class _DetectState extends State<Detect> {
 //    List<Widget> stackChildren = [];
 
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(
-            color: Colors.black, //change your color here
-          ),
-          title: Text(
-            "Flutter x TF-Lite",
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Colors.teal,
-          centerTitle: true,
-        ),
+        // appBar: AppBar(
+        //   iconTheme: IconThemeData(
+        //     color: Colors.black, //change your color here
+        //   ),
+        //   title: Text(
+        //     "",
+        //     style: TextStyle(color: Colors.white),
+        //   ),
+        //   backgroundColor: Colors.teal,
+        //   centerTitle: true,
+        // ),
         body: ListView(
           children: <Widget>[
             Padding(
@@ -247,7 +258,48 @@ class _DetectState extends State<Detect> {
                 ),
               ],
             ),
+            detected == false ? Container() : Padding(
+              padding: const EdgeInsets.symmetric(horizontal:37.0),
+              child: RaisedButton(
+                child: Text('Continue',style: TextStyle(color: Colors.white,fontSize: 20),),
+                color: kPrimaryColor,
+                onPressed: () {
+                  searchApi(_recognitions[0]['label'].toString());
+                  // Navigator.of(context)
+                  //     .pushReplacement(CustomRoute(builder: (ctx) => ),);
+                },
+              ),
+            ),
           ],
         ));
+  }
+
+  Future<void> searchApi(String query) async {
+    final apiKey = 'FDih56yE2SNCMqPMN9GO2obTYBAsvZO8LVwClfqK';
+    var url =
+        'https://api.nal.usda.gov/fdc/v1/foods/search?api_key=${apiKey}&query=${query}';
+    // var response =
+    return await http.get(url).then((response) {
+//changed after seeing udemy//
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body.length}');
+      if (response.statusCode != 200) {
+        print("Could not find");
+      } else {
+        var myResponse = json.decode(response.body);
+        var food = myResponse['foods'];
+
+        Food data = Food.fromJson(food[0]);
+        print(data.name);
+
+        Navigator.of(context).push(CustomRoute(
+          builder: (ctx) => MealDetail(
+            mealfood: data,
+            mealType: 'Lunch',
+          ),
+        ));
+      }
+    });
   }
 }

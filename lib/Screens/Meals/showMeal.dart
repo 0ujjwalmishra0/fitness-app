@@ -1,12 +1,8 @@
 import 'package:fitness_app/Screens/Meals/AddMeals.dart';
 import 'package:fitness_app/constants.dart';
-import 'package:fitness_app/models/auth.dart';
 import 'package:fitness_app/models/custom_route.dart';
-import 'package:fitness_app/models/food.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final foodRef = Firestore.instance.collection('foods');
 
@@ -32,7 +28,7 @@ class _ShowMealState extends State<ShowMeal> {
   }
 
   getData() async {
-    return await foodRef.document(widget.uid).collection('food').getDocuments();
+    return await foodRef.document(widget.uid).collection(widget.mealType).getDocuments();
     // .then((value) => value.documents.forEach((element) {
     //       print(element.data);
     //     }));
@@ -140,7 +136,7 @@ class _ShowMealState extends State<ShowMeal> {
         child: RaisedButton(
           onPressed: () {
             Navigator.of(context)
-                .pushReplacement(CustomRoute(builder: (ctx) => AddMeals()));
+                .pushReplacement(CustomRoute(builder: (ctx) => AddMeals(mealType: widget.mealType,)));
           },
           child: Text(
             'Add',

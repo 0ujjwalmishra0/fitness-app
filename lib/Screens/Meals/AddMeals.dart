@@ -11,12 +11,13 @@ import 'package:http/http.dart' as http;
 
 class AddMeals extends StatefulWidget {
   static const routeName = '/AddMealsPage';
-
+  String mealType;
+  AddMeals({this.mealType});
   @override
-  _AddMealsState createState() => _AddMealsState();
+  AddMealsState createState() => AddMealsState();
 }
 
-class _AddMealsState extends State<AddMeals> {
+class AddMealsState extends State<AddMeals> {
   List<FoodResult> searchedFood = [];
   bool apiCall = false;
   String searchQuery;
@@ -48,7 +49,7 @@ class _AddMealsState extends State<AddMeals> {
         var food = myResponse['foods'];
         food.forEach((item) {
           Food data = Food.fromJson(item);
-          FoodResult foodResult = FoodResult(data);
+          FoodResult foodResult = FoodResult(data, widget.mealType);
           // searchedFood.add(data);
           searchedFood.add(foodResult);
         });
@@ -171,7 +172,8 @@ class _AddMealsState extends State<AddMeals> {
 
 class FoodResult extends StatefulWidget {
   final Food food;
-  FoodResult(this.food);
+  String mealType;
+  FoodResult(this.food, this.mealType);
 
   @override
   _FoodResultState createState() => _FoodResultState();
@@ -202,7 +204,11 @@ class _FoodResultState extends State<FoodResult> {
             onTap: () {
               print('tapped! ${widget.food.id}');
               Navigator.of(context).push(CustomRoute(
-                  builder: (ctx) => MealDetail(mealfood: widget.food)));
+                builder: (ctx) => MealDetail(
+                  mealfood: widget.food,
+                  mealType: widget.mealType,
+                ),
+              ));
               // foodBox.put('food', widget.food);
               print('food name is: ${widget.food.name}');
             },

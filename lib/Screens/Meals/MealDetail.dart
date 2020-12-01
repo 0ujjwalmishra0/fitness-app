@@ -1,3 +1,4 @@
+import 'package:fitness_app/constants.dart';
 import 'package:fitness_app/models/Database1.dart';
 import 'package:fitness_app/models/auth.dart';
 import 'package:fitness_app/models/nutrient.dart';
@@ -10,8 +11,8 @@ final foodRef = Firestore.instance.collection('foods');
 
 class MealDetail extends StatefulWidget {
   Food mealfood;
-  final String name;
-  MealDetail({this.mealfood, this.name});
+  final String mealType;
+  MealDetail({this.mealfood, this.mealType});
 
   @override
   _MealDetailState createState() => _MealDetailState();
@@ -35,25 +36,30 @@ class _MealDetailState extends State<MealDetail> {
     super.initState();
   }
 
+
+  final date= DateTime.now().day.toString();
   void createRecord() async {
-    await foodRef.document(uid).collection('food').add({
+    await foodRef.document(uid).collection(widget.mealType).add({
       'name': widget.mealfood.name,
       'protein': protein.value,
       'carbohydrate': carbohydrate.value,
       'energy': energy.value,
       'sugar': sugar.value,
       'fats': fats.value,
-      'multiplier': multiplier?? 1,
+      'multiplier': multiplier ?? 1,
+      'time': DateTime.now(),
     });
   }
 
   buildQuantity() {
     return TextFormField(
+      
         autofocus: true,
         controller: _quantity,
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
-          hintText: 'Quantity',
+          hintText: 'Quantity (gm)',
+          hintStyle: TextStyle(color: kPrimaryColor),
           suffixIcon: _quantity.text.isEmpty
               ? null
               : IconButton(
@@ -125,6 +131,8 @@ class _MealDetailState extends State<MealDetail> {
         padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 15),
         child: Column(
           children: [
+            Text(widget.mealfood.name),
+            SizedBox(height: 20,),
             Text('Pick the quantity of Food'),
             buildQuantity(),
             SizedBox(height: height * 0.05),
