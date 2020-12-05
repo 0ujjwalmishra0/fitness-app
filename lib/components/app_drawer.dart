@@ -14,7 +14,7 @@ class AppDrawer extends StatelessWidget {
           children: <Widget>[
             AppBar(
               title: Text(
-                'Welcome, Ujjwal',
+                'Welcome',
                 style: TextStyle(fontFamily: 'OpenSans', color: Colors.black),
               ),
               //to remove the back button

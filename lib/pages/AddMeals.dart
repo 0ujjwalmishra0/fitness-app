@@ -6,7 +6,7 @@ import 'package:fitness_app/models/custom_route.dart';
 import 'package:fitness_app/models/food.dart';
 import 'package:fitness_app/models/nutrient.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+import 'Barcode.dart';
 import 'package:http/http.dart' as http;
 
 class AddMeals extends StatefulWidget {
@@ -18,7 +18,7 @@ class AddMeals extends StatefulWidget {
 
 class _AddMealsState extends State<AddMeals> {
   List<FoodResult> searchedFood = [];
-
+  Barcode b = new Barcode();
   // List<Food> searchedFood = [];
   List<Nutrient> nutri = [];
   TextEditingController searchController = TextEditingController();
@@ -55,10 +55,14 @@ class _AddMealsState extends State<AddMeals> {
       actions: <Widget>[
         IconButton(
           icon: Icon(
-            Icons.camera_alt,
+            Icons.qr_code_scanner_outlined,
             color: kPrimaryColor,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context)
+                .push(CustomRoute(builder: (ctx) => Barcode()));
+            print('button tappped');
+          },
         ),
         SizedBox(
           width: 5,
@@ -154,8 +158,8 @@ class _FoodResultState extends State<FoodResult> {
           GestureDetector(
             onTap: () {
               print('tapped! ${widget.food.id}');
-              Navigator.of(context)
-                  .push(CustomRoute(builder: (ctx) => MealDetail(mealfood: widget.food)));
+              Navigator.of(context).push(CustomRoute(
+                  builder: (ctx) => MealDetail(mealfood: widget.food)));
               // foodBox.put('food', widget.food);
               print('food name is: ${widget.food.name}');
             },

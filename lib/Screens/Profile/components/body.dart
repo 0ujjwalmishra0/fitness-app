@@ -49,7 +49,8 @@ class _BodyState extends State<Body> {
         ),
         child: Row(
           children: <Widget>[
-            SvgPicture.asset(iconSrc),
+            // SvgPicture.asset(iconSrc),
+            Image.asset(iconSrc,height: 26.5),
             SizedBox(width: defaultSize * 2),
             Text(
               title,
@@ -94,18 +95,18 @@ class _BodyState extends State<Body> {
                     email: email,
                   ),
                   SizedBox(height: SizeConfig.defaultSize * 2), //20
+                  // ProfileMenuItem(
+                  //   iconSrc: "assets/icons2/bookmark_fill.svg",
+                  //   title: "Saved Foods",
+                  //   press: () {},
+                  // ),
+                  // ProfileMenuItem(
+                  //   iconSrc: "assets/icons2/chef_color.svg",
+                  //   title: "Super Plan",
+                  //   press: () {},
+                  // ),
                   ProfileMenuItem(
-                    iconSrc: "assets/icons2/bookmark_fill.svg",
-                    title: "Saved Foods",
-                    press: () {},
-                  ),
-                  ProfileMenuItem(
-                    iconSrc: "assets/icons2/chef_color.svg",
-                    title: "Super Plan",
-                    press: () {},
-                  ),
-                  ProfileMenuItem(
-                    iconSrc: "assets/icons2/language.svg",
+                    iconSrc: "assets/images/info.png",
                     title: "Basic Information",
                     press: () {
                       Navigator.of(context).push(
@@ -113,7 +114,7 @@ class _BodyState extends State<Body> {
                     },
                   ),
                   ProfileMenuItem(
-                    iconSrc: "assets/icons2/info.svg",
+                    iconSrc: "assets/images/goal.png",
                     title: "My Goal",
                     press: () {
                       Navigator.of(context)
@@ -121,7 +122,8 @@ class _BodyState extends State<Body> {
                     },
                   ),
                   ProfileMenuItem(
-                    iconSrc: "assets/icons2/info.svg",
+                    // iconSrc: "assets/icons2/info.svg",
+                    iconSrc: "assets/images/logout.png",
                     title: "Logout",
                     press: () {
                       auth.signOutGoogle(context);
@@ -129,7 +131,7 @@ class _BodyState extends State<Body> {
                   ),
                   _buildSwitchTile(
                     "Dark Mode",
-                    "assets/icons2/info.svg",
+                    "assets/images/half-moon2.png",
                   ),
                 ],
               );

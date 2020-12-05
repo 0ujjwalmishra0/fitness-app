@@ -28,7 +28,8 @@ class MyListTile extends StatelessWidget {
       child: SafeArea(
         child: Row(
           children: <Widget>[
-            SvgPicture.asset(iconSrc),
+            // SvgPicture.asset(iconSrc),
+            Image.asset(iconSrc , height: 25),
             SizedBox(width: defaultSize * 2),
             Text(
               title,
@@ -44,6 +45,7 @@ class MyListTile extends StatelessWidget {
               size: defaultSize * 1.6,
               color: kTextLigntColor,
             ),
+            
             SizedBox(width: size.width*0.03,)
           ],
         ),

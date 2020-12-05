@@ -5,6 +5,7 @@ import 'package:fitness_app/constants.dart';
 import 'package:fitness_app/models/custom_route.dart';
 import 'package:fitness_app/models/food.dart';
 import 'package:fitness_app/models/nutrient.dart';
+import 'package:fitness_app/pages/Barcode.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
@@ -70,10 +71,14 @@ class AddMealsState extends State<AddMeals> {
       actions: <Widget>[
         IconButton(
           icon: Icon(
-            Icons.camera_alt,
+            Icons.qr_code_rounded,
             color: kPrimaryColor,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context)
+                .push(CustomRoute(builder: (ctx) => Barcode()));
+            print('button tappped');
+          },
         ),
         SizedBox(
           width: 5,
@@ -225,10 +230,4 @@ class _FoodResultState extends State<FoodResult> {
     );
   }
 
-  // @override
-  // void dispose() {
-  //   // TODO: implement dispose
-  //   super.dispose();
-  //   foodBox.close();
-  // }
 }

@@ -55,7 +55,7 @@ class _AddMealsState extends State<AddMeals> {
       actions: <Widget>[
         IconButton(
           icon: Icon(
-            Icons.camera_alt,
+            Icons.qr_code_scanner_rounded,
             color: kPrimaryColor,
           ),
           onPressed: () {},

@@ -41,7 +41,7 @@ class Meals extends StatelessWidget {
         Column(
           children: <Widget>[
             Text('Calorie'),
-            Text('900k'),
+            Text('900 cal'),
           ],
         ),
       ],
@@ -51,7 +51,7 @@ class Meals extends StatelessWidget {
   Widget buildCard(
       String title, String description, String imgSrc, BuildContext context) {
     // double defaultSize = SizeConfig.defaultSize;
-    description = description.isEmpty ? 'No meal added yet' : description;
+    // description = description.isEmpty ? 'No meal added yet' : description;
     return GestureDetector(
       onTap: () {
         Navigator.of(context)
@@ -90,12 +90,12 @@ class Meals extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 5),
-                    Text(
-                      description,
-                      style: TextStyle(fontSize: 16, color: Colors.white54),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    // Text(
+                    //   description,
+                    //   style: TextStyle(fontSize: 16, color: Colors.white54),
+                    //   maxLines: 2,
+                    //   overflow: TextOverflow.ellipsis,
+                    // ),
                   ],
                 ),
               ),
@@ -130,10 +130,9 @@ class Meals extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
+              SizedBox(height: 10,),
               Text('Daily Calories', style: TextStyle(fontSize: 40)),
               showTotalCalorie(),
-              // selectMeal('Breakfast', 'apple',context),
-
               buildCard('Breakfast', '', 'assets/images/image_1.png', context),
               buildCard('Lunch', '', 'assets/images/image_2.png', context),
               buildCard('Dinner', '', 'assets/images/cook_new@2x.png', context),
@@ -186,7 +185,7 @@ class Meals extends StatelessWidget {
                 Text(mealType),
                 Row(
                   children: <Widget>[
-                    Text('0 of 450kcal'),
+                    Text('0 of 450cal'),
                     IconButton(
                         icon: Icon(Icons.add_circle),
                         onPressed: () {

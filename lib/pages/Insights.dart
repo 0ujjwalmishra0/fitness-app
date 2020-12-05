@@ -15,6 +15,9 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 final foodRef = Firestore.instance.collection('foods');
+final currTime = DateTime.now().day;
+// final DateFormat formatter = DateFormat('yyyy-MM-dd');
+// final String currDate = formatter.format(now);
 
 class Insights extends StatefulWidget {
   String uid;
@@ -39,7 +42,8 @@ class _InsightsState extends State<Insights> {
   getData() async {
     return await foodRef
         .document(widget.uid)
-        .collection('Lunch')
+        .collection('Breakfast')
+        .where('time', isLessThanOrEqualTo: DateTime.now().day)
         .getDocuments();
   }
 
@@ -54,30 +58,39 @@ class _InsightsState extends State<Insights> {
   int fats;
   bool status;
   List<FoodData> foodList = [];
-  double totalEnergy = 0;
-
+  double res = 0;
+  List graph = [];
+  List graphDate = [];
+  var uniqueDate = <int>{};
   calcEnergy() {
-    double res = 0;
-
-    final DateTime now = DateTime.now();
-    final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    final String currDate = formatter.format(now);
-
     for (var i = 0; i < foods.documents.length; i++) {
-      res += (foods.documents[i].data['energy']);
-
-      int timeInMillis = foods.documents[i].data['time'].seconds;
-      var date = DateTime.fromMillisecondsSinceEpoch(timeInMillis);
-      var formattedDate = DateFormat.yMd().format(date);
-      print(formattedDate);
-      print(currDate);
-      // if (currDate == formattedDate) {
-      //   print("yes");
-      // } else {
-      //   print("false");
-      // }
+      uniqueDate.add(foods.documents[i].data['time']);
     }
-    print(res);
+
+    print(uniqueDate.length);
+
+    for (var j = 0; j < uniqueDate.length; j++) {
+      for (var i = 0; i < foods.documents.length; i++) {
+        if (foods.documents[i].data['time'] == (currTime - j)) {
+          res += (foods.documents[i].data['energy'] *
+              foods.documents[i].data['multiplier']);
+        }
+
+        // print(res);
+      }
+
+      graph.add(res);
+      graphDate.add(currTime - j);
+      res = 0;
+    }
+
+    // print('res is $res');
+    print(graph);
+    print(graphDate);
+    // res = 0;
+
+
+    setState(() {});
   }
 
   _launchURL(String url) async {
@@ -195,50 +208,97 @@ class _InsightsState extends State<Insights> {
 
   @override
   Widget build(BuildContext context) {
+    List<FoodData> foodData = [];
+    // for (var i = 0; i < graph.length; i++) {
+    //   foodData.add(FoodData(day: graphDate[i].toString(), cal: graph[i]));
+    // }
+for (var i = graph.length-1; i>=0; i--) {
+      foodData.add(FoodData(day: graphDate[i].toString(), cal: graph[i]));
+    }
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.dark,
+        title: Text('Graph'),
       ),
       body: Center(
         // child: showInformation(name, desc),
         child: Container(
           height: 400,
-          width: 300,
+          width: 350,
+          // child:  _getDefaultPieChart(),
           child: SfCartesianChart(
-            primaryXAxis: CategoryAxis(),
-            title: ChartTitle(text: 'data'),
+            primaryXAxis: CategoryAxis(
+              majorGridLines: MajorGridLines(width: 0),
+            ),
+            primaryYAxis: NumericAxis(
+          axisLine: AxisLine(width: 0),
+          labelFormat: '{value}',
+          majorTickLines: MajorTickLines(size: 0)),
+      tooltipBehavior:TooltipBehavior(enable: true, header: '', canShowMarker: false),
+            title: ChartTitle(text: 'Energy(cal)'),
             // legend: Legend(isVisible: true),
-            tooltipBehavior: TooltipBehavior(enable: true),
-            series: <LineSeries<FoodData, String>>[
+            series: <ColumnSeries<FoodData, String>>[
               // Initialize line series.
-              LineSeries<FoodData, String>(
-                  dataSource: [
-                    FoodData('Jan', 35),
-                    FoodData('Feb', 28),
-                    FoodData('Mar', 34),
-                    FoodData('Apr', 32),
-                    FoodData('May', 40)
-                  ],
+              ColumnSeries<FoodData, String>(
+                  dataSource: foodData,
                   xValueMapper: (FoodData food, _) => food.day,
                   yValueMapper: (FoodData food, _) => food.cal,
-                  dataLabelSettings: DataLabelSettings(isVisible: true)),
+                  dataLabelMapper: (FoodData data, _) => data.text,
+                  dataLabelSettings: DataLabelSettings(isVisible: true),
+                  width: 0.2,
+                  spacing: 0.0,
+                  
+                  ),
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        icon: Icon(Icons.camera_alt),
-        label: Text("Scan"),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.refresh_rounded),
+
         onPressed: calcEnergy,
         // scanQR,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
+
+  /// Returns the circular  chart with pie series.
+  SfCircularChart _getDefaultPieChart() {
+    return SfCircularChart(
+      // title: ChartTitle(text: isCardView ? '' : 'Sales by sales person'),
+      // legend: Legend(isVisible: !isCardView),
+      series: _getDefaultPieSeries(),
+    );
+  }
+
+  /// Returns the pie series.
+  List<PieSeries<FoodData, String>> _getDefaultPieSeries() {
+    final List<FoodData> pieData = <FoodData>[
+      FoodData(day: 'David', cal: 30, text: 'Protein \n 30%'),
+      FoodData(day: 'Steve', cal: 35, text: 'Carbs \n 35%'),
+      FoodData(day: 'Jack', cal: 39, text: 'Fats \n 39%'),
+      FoodData(day: 'Others', cal: 75, text: 'Cal \n 75%'),
+    ];
+    return <PieSeries<FoodData, String>>[
+      PieSeries<FoodData, String>(
+          explode: true,
+          explodeIndex: 0,
+          explodeOffset: '10%',
+          dataSource: pieData,
+          xValueMapper: (FoodData data, _) => data.day,
+          yValueMapper: (FoodData data, _) => data.cal,
+          dataLabelMapper: (FoodData data, _) => data.text,
+          startAngle: 90,
+          endAngle: 90,
+          dataLabelSettings: DataLabelSettings(isVisible: true)),
+    ];
+  }
 }
 
 class FoodData {
-  FoodData(this.day, this.cal);
+  FoodData({this.day, this.cal, this.text});
   final String day;
   final double cal;
+  final String text;
 }

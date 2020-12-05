@@ -1,13 +1,18 @@
 import 'package:fitness_app/constants.dart';
 import 'package:fitness_app/models/Database1.dart';
 import 'package:fitness_app/models/auth.dart';
+import 'package:fitness_app/models/custom_route.dart';
 import 'package:fitness_app/models/nutrient.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/food.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 final foodRef = Firestore.instance.collection('foods');
+
+final DateTime now = DateTime.now();
+final date = DateFormat('yyyy-MM-dd').format(now);
 
 class MealDetail extends StatefulWidget {
   Food mealfood;
@@ -36,7 +41,6 @@ class _MealDetailState extends State<MealDetail> {
     super.initState();
   }
 
-
   final date= DateTime.now().day.toString();
   void createRecord() async {
     await foodRef.document(uid).collection(widget.mealType).add({
@@ -47,7 +51,7 @@ class _MealDetailState extends State<MealDetail> {
       'sugar': sugar.value,
       'fats': fats.value,
       'multiplier': multiplier ?? 1,
-      'time': DateTime.now(),
+      'time': DateTime.now().day,
     });
   }
 
@@ -58,7 +62,7 @@ class _MealDetailState extends State<MealDetail> {
         controller: _quantity,
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
-          hintText: 'Quantity (gm)',
+          hintText: 'Quantity',
           hintStyle: TextStyle(color: kPrimaryColor),
           suffixIcon: _quantity.text.isEmpty
               ? null
@@ -136,41 +140,57 @@ class _MealDetailState extends State<MealDetail> {
             Text('Pick the quantity of Food'),
             buildQuantity(),
             SizedBox(height: height * 0.05),
-            Text('Nutritional Information'),
+            Text('Nutritional Information(per 100gm)'),
             SizedBox(height: height * 0.04),
             buildInfo(protein),
             buildInfo(fats),
             buildInfo(carbohydrate),
             buildInfo(sugar),
             buildInfo(energy),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                RaisedButton(
-                  onPressed: () async {
-                    newFood = Food(name: widget.mealfood.name);
-                    print(newFood.name);
-                    await _dbProvider.addFood(newFood);
-                  },
-                  child: Text('Add'),
-                ),
-                RaisedButton(
-                  onPressed: () async {
-                    //TODO:ADD food to firestore
-                    createRecord();
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     RaisedButton(
+            //       onPressed: () async {
+            //         newFood = Food(name: widget.mealfood.name);
+            //         print(newFood.name);
+            //         await _dbProvider.addFood(newFood);
+            //       },
+            //       child: Text('Add'),
+            //     ),
+            //     RaisedButton(
+            //       onPressed: () async {
+            //         //TODO:ADD food to firestore
+            //         createRecord();
 
-                    //TODO: ADD food to sql
-                    // List<Food> myFoods = await _dbProvider.getAllFoods();
+            //         //TODO: ADD food to sql
+            //         // List<Food> myFoods = await _dbProvider.getAllFoods();
 
-                    // myFoods.forEach((element) {
-                    //   print(element);
-                    // });
-                  },
-                  child: Text('Add to cloud'),
-                ),
-              ],
-            )
+            //         // myFoods.forEach((element) {
+            //         //   print(element);
+            //         // });
+            //       },
+            //       child: Text('Add to cloud'),
+            //     ),
+
+                
+            //   ],
+            // ),
           ],
+        ),
+        
+      ),
+       bottomNavigationBar: Container(
+        height: 50,
+        child: RaisedButton(
+          onPressed: () async {
+               createRecord();
+          },
+          child: Text(
+            'Save',
+            style: TextStyle(color: Colors.white),
+          ),
+          color: kPrimaryColor,
         ),
       ),
     );

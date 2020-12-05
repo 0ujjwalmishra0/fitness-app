@@ -90,7 +90,9 @@ class _ShowMealState extends State<ShowMeal> {
     // getLocalData();
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(widget.mealType),
+      ),
       body: foodList(),
       // FutureBuilder(
       //     future: getData(),
