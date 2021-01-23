@@ -1,4 +1,4 @@
-# Social App
+# FitHub- Fitness App
 
 An app built using Flutter and Firebase which keeps track of Nutritional Content present in food.
 Using deep learning it identifies the food through images and then automatically fetches nutritional content present in the food.
